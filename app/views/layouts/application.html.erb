@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HhmterestApp</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <header>
+    <h1><a style="color:lightpink">Le<a>Boudoir</h1>
+  </header>
+  <div id='posts-container'>
+    <div id='modal'><span id='close'>x</span>
+    <div id='card-info'></div>
+    <div id='card-update'></div>
+    </div>
+  </div>
+  <div id='forms-container'>
+    <h3>New Post?</h3>
+    <div><label>Title</label><input type="text" name='title'></div><br>
+    <div><label>Author</label><input type="text" name='author'></div><br>
+    <div><label>Image</label><input type="text" name='image_url'></div><br>
+    <div><label>Content</label><input type="text" name='content'></div><br>
+    <div><label>Category</label><input type="text" name='category'></div><br>
+    <button id='new-post'>add</button>
+  </div>
+  <div id='footer'><h3>Show More</h3></div>
+</body>
+</html>
