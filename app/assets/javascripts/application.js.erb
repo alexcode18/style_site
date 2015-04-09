@@ -20,19 +20,40 @@ var fetchLimit = 10;
 $(function(){
   console.log('Loaded, bro');
   
+  // $('.card').resizable({
+  //   aspectRatio: true,
+  //   containment: '#posts-container'
+  // });
+
+  // $('.image img').resizable({
+  //   aspectRatio: true
+  //  });
+
   fetchPosts();
   $('body').on('click', '.remove', removePost);
   $('body').on('click', '#new-post', addPost);
-  $('#footer').on('click', showMore);
+  // $('#footer').on('click', showMore);
   $('body').on('click', '.edit', editPost);
   $('body').on('click', '.submit-edit', updatePost);
   $('body').on('click', '#close', close);
-  $('body').on('mouseenter', '.card', displayPostInfo);
+  $('body').on('mouseenter', '.card', showPostInfo);
   $('body').on('mouseleave', '.card', hidePostInfo);
-});
+  // var hoverHeight = $('.hover_box').height();
+  // console.log('hoverHeight' + hoverHeight);
+  $('body').on('click', '.card', renderImageModal);
 
-// :title, :content, :author, :category
-//   validates :image_url, format:
+  setInterval(function(){
+  	var newHeight = $('.image img').height();
+  	console.log(newHeight);
+  	$('.card').css('height', newHeight);
+  }, 400);
+
+  $(window).scroll(function(){
+		if ($(window).scrollTop() > $('body').height() / 2){
+    	showMore();// ajax call get data from server and append to the div
+    }
+	});
+});
 
 function fetchPosts() {
 	$.get('/posts').done(function(data){
@@ -44,12 +65,12 @@ function displayPosts(data) {
 }
 
 function renderPost(data) {
-	var postBox = $('<div>').attr('class', 'card').attr('id', data.id);
+	var postBox = $('<div>').attr('class', 'card col-xs-6 col-sm-3 col-md-3 col-lg-2').attr('id', data.id);
 	var imageBox = $('<div>').attr('class', 'image');
 	var hoverOver = $('<div>').attr('class', 'hover_box');
-	var img = $('<img>').attr('src', data.image_url);
+	var img = $('<img>').attr('src', data.image_url)
 	var title = $('<h4>').text(data.title);
-	var author = $('<p>').text(data.author);
+	var author = $('<p>').text('by ' + data.author).addClass('thumbnail_author');
 	var content = $('<p>').text(data.content);
 	var edit = $('<button>').text('edit').addClass('edit').data('id', data);
 	var remove = $('<button>').text('remove').addClass('remove').data('id', data.id);
@@ -61,13 +82,14 @@ function renderPost(data) {
 	$('#posts-container').append(postBox);
 }
 
-function displayPostInfo() {
-	$(this).find('.hover_box').animate({top: -120 + 'px'}, 900);
+function showPostInfo() {
+	$(this).find('.hover_box').animate({bottom: 0 + 'px'}, 900);
 }
 
 function hidePostInfo() {
-	$(this).find('.hover_box').animate({top: 0 + 'px'}, 300);
+	$(this).find('.hover_box').animate({bottom: -120 + 'px'}, 200);
 }
+
 
 function removePost() {
 	console.log('removePost');
@@ -146,6 +168,23 @@ function showEditForm(currentPost){
 								.append(submit);
 								
 	$('div#modal').css('display', 'inline');
+}
+
+function renderImageModal(){
+	$('#modal-post-container').empty();
+	var postID = $(this).attr('id');
+	
+	$.get('/posts/' + postID).done(function(data){
+		var postBox = $('<div>').attr('class', 'modal_card').attr('id', data.id);
+		var imageBox = $('<div>').attr('class', 'modal_image');
+		var img = $('<img>').attr('src', data.image_url);
+		var title = $('<h4>').text(data.title);
+		var author = $('<p>').text(data.author);
+		var content = $('<p>').text(data.content);
+
+		$(imageBox).append(img);
+		$('#modal-post-container').empty().append(imageBox).append(title).append(author).append(content);
+	});
 }
 
 function updatePost() {

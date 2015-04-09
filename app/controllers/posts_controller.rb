@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
 
   def index
-    @posts = Post.order(created_at: :desc).limit(10)
+    @posts = Post.order(created_at: :desc).limit(50)
     render json: @posts
   end
 
@@ -28,7 +28,7 @@ class PostsController < ApplicationController
   end
 
   def show_more
-    @posts = Post.order(created_at: :desc).limit(10).offset(params[:offset])
+    @posts = Post.order(created_at: :desc).limit(50).offset(params[:offset])
     render json: @posts
   end
 
